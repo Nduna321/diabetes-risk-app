@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diabetes Risk Assessment</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: system-ui, Arial, sans-serif; background: #f4f6fb; color: #1d2433; min-height: 100vh; padding: 24px 16px; }
+    main { width: 100%; max-width: 680px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+    h1 { margin: 0 0 6px; font-size: 22px; line-height: 1.25; }
+    p.lead { color: #55607a; margin: 0 0 18px; font-size: 15px; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 14px 16px; }
+    @media (min-width: 560px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .field { min-width: 0; }
+    label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+    input { display: block; width: 100%; padding: 10px; border: 1px solid #c7cfe0; border-radius: 6px; font-size: 15px; font-family: inherit; }
+    input:focus { outline: 2px solid #9db8f0; border-color: #2a5bd7; }
+    .hint { font-size: 12px; color: #6b7590; margin-top: 3px; }
+    button { margin-top: 20px; width: 100%; padding: 12px; background: #2a5bd7; color: #fff; border: 0; border-radius: 6px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #2350c0; }
+    .error { background: #fde8e8; color: #9b1c1c; padding: 10px 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+    .disclaimer { font-size: 12px; color: #6b7590; margin: 18px 0 0; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Diabetes Risk Assessment</h1>
+  <p class="lead">Enter the measurements below. A Random Forest model estimates the likelihood of diabetes.</p>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <form method="post" action="{{ url_for('predict') }}">
+    <div class="grid">
+      {% for name, label, low, high, kind in fields %}
+        <div class="field">
+          <label for="{{ name }}">{{ label }}</label>
+          <input id="{{ name }}" name="{{ name }}" inputmode="decimal" value="{{ values.get(name, '') }}" required>
+          <div class="hint">Allowed range: {{ low }} to {{ high }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit">Get prediction</button>
+  </form>
+  <p class="disclaimer">For learning and demonstration only. This is not a medical diagnosis. Speak to a healthcare professional about your health.</p>
+</main>
+</body>
+</html>
